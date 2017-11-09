@@ -11,6 +11,35 @@ public class AutoLoadPrefabEditor : Editor
         autoloadPrefabObj = (AutoLoadPrefab)target;
     }
 
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        if (!Application.isPlaying)
+        {
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("加载", GUILayout.Height(25), GUILayout.MinWidth(120), GUILayout.ExpandWidth(false)))
+            {
+                if (autoloadPrefabObj != null && autoloadPrefabObj.SourcePrefab != null && autoloadPrefabObj.InstancePrefab == null)
+                {
+                    autoloadPrefabObj.InstancePrefab = (GameObject)PrefabUtility.InstantiatePrefab(autoloadPrefabObj.SourcePrefab);
+                    autoloadPrefabObj.InstancePrefab.transform.SetParent(autoloadPrefabObj.transform, false);
+                    PrefabUtility.prefabInstanceUpdated += OnPrefabInstanceUpdated;
+                }
+            }
+            if (GUILayout.Button("销毁", GUILayout.Height(25), GUILayout.MinWidth(120), GUILayout.ExpandWidth(false)))
+            {
+                if (autoloadPrefabObj != null && autoloadPrefabObj.InstancePrefab != null)
+                {
+                    GameObject.DestroyImmediate(autoloadPrefabObj.InstancePrefab);
+                    autoloadPrefabObj.InstancePrefab = null;
+                    PrefabUtility.prefabInstanceUpdated -= OnPrefabInstanceUpdated;
+                }
+            }
+            GUILayout.EndHorizontal();
+        }
+    }
+
     void OnPrefabInstanceUpdated(GameObject instance)
     {
         AutoLoadPrefab[] autoLoadPrefabArray = instance.GetComponentsInChildren<AutoLoadPrefab>(true);
@@ -32,34 +61,5 @@ public class AutoLoadPrefabEditor : Editor
         PrefabUtility.ReplacePrefab(instance, PrefabUtility.GetPrefabParent(instance), ReplacePrefabOptions.ConnectToPrefab);
         PrefabUtility.ReconnectToLastPrefab(instance);
         Selection.activeGameObject = (GameObject)PrefabUtility.GetPrefabParent(instance);
-    }
-
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-
-        if (!Application.isPlaying)
-        {
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Instance", GUILayout.Height(25), GUILayout.MinWidth(120), GUILayout.ExpandWidth(false)))
-            {
-                if (autoloadPrefabObj != null && autoloadPrefabObj.SourcePrefab != null && autoloadPrefabObj.InstancePrefab == null)
-                {
-                    autoloadPrefabObj.InstancePrefab = (GameObject)PrefabUtility.InstantiatePrefab(autoloadPrefabObj.SourcePrefab);
-                    autoloadPrefabObj.InstancePrefab.transform.SetParent(autoloadPrefabObj.transform, false);
-                    PrefabUtility.prefabInstanceUpdated += OnPrefabInstanceUpdated;
-                }
-            }
-            if (GUILayout.Button("Destroy", GUILayout.Height(25), GUILayout.MinWidth(120), GUILayout.ExpandWidth(false)))
-            {
-                if (autoloadPrefabObj != null && autoloadPrefabObj.InstancePrefab != null)
-                {
-                    GameObject.DestroyImmediate(autoloadPrefabObj.InstancePrefab);
-                    autoloadPrefabObj.InstancePrefab = null;
-                    PrefabUtility.prefabInstanceUpdated -= OnPrefabInstanceUpdated;
-                }
-            }
-            GUILayout.EndHorizontal();
-        }
     }
 }

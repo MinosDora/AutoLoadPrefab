@@ -2,14 +2,40 @@ using UnityEngine;
 
 public class AutoLoadPrefab : MonoBehaviour
 {
-    [Tooltip("prefab source")]
+    public enum AutoLoadMoment
+    {
+        None,
+        Awake,
+        Start,
+        OnEnable,
+    }
+
+    public AutoLoadMoment LoadMoment = AutoLoadMoment.Start;
     public GameObject SourcePrefab;
-    [Tooltip("prefab instance, in Editor Mode , it's connected to the prefab source.")]
     public GameObject InstancePrefab;
+
+    void Awake()
+    {
+        if (LoadMoment == AutoLoadMoment.Awake)
+        {
+            LoadSourcePrefab();
+        }
+    }
 
     void Start()
     {
-        LoadSourcePrefab();
+        if (LoadMoment == AutoLoadMoment.Start)
+        {
+            LoadSourcePrefab();
+        }
+    }
+
+    void OnEnable()
+    {
+        if (LoadMoment == AutoLoadMoment.OnEnable)
+        {
+            LoadSourcePrefab();
+        }
     }
 
     public void LoadSourcePrefab()
