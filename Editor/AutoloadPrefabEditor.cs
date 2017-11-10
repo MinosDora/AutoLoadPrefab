@@ -18,7 +18,7 @@ public class AutoLoadPrefabEditor : Editor
         if (!Application.isPlaying)
         {
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("加载", GUILayout.Height(25), GUILayout.MinWidth(120), GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("Instance", GUILayout.Height(25), GUILayout.MinWidth(120), GUILayout.ExpandWidth(false)))
             {
                 if (autoloadPrefabObj != null && autoloadPrefabObj.SourcePrefab != null && autoloadPrefabObj.InstancePrefab == null)
                 {
@@ -27,7 +27,7 @@ public class AutoLoadPrefabEditor : Editor
                     PrefabUtility.prefabInstanceUpdated += OnPrefabInstanceUpdated;
                 }
             }
-            if (GUILayout.Button("销毁", GUILayout.Height(25), GUILayout.MinWidth(120), GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("Destroy", GUILayout.Height(25), GUILayout.MinWidth(120), GUILayout.ExpandWidth(false)))
             {
                 if (autoloadPrefabObj != null && autoloadPrefabObj.InstancePrefab != null)
                 {

@@ -11,7 +11,9 @@ public class AutoLoadPrefab : MonoBehaviour
     }
 
     public AutoLoadMoment LoadMoment = AutoLoadMoment.Start;
+    [Tooltip("prefab source")]
     public GameObject SourcePrefab;
+    [Tooltip("prefab instance; in Editor Mode , it's connected to the prefab source.")]
     public GameObject InstancePrefab;
 
     void Awake()
